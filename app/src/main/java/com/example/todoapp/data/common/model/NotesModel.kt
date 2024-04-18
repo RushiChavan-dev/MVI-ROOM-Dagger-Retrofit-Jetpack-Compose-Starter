@@ -5,10 +5,11 @@ import androidx.room.PrimaryKey
 
 
 @Entity
-data class Model(
+data class NotesModel(
     @PrimaryKey(autoGenerate = true)
     val id:Int,
-    val title: String = ""
+    val title: String = "",
+    val description : String= ""
 )
 
 

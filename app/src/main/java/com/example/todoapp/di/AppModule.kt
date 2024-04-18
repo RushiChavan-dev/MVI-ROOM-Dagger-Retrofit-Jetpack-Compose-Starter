@@ -2,10 +2,11 @@ package com.example.todoapp.di
 
 import android.app.Application
 import androidx.room.Room
-import com.example.todoapp.data.local.TemplateDatabase
-import com.example.todoapp.data.remote.TemplateService
-import com.example.todoapp.data.repository.room.TemplateRepo
-import com.example.todoapp.domain.repository.localroom.TemplateRepoImplementation
+import com.example.todoapp.data.database.DNotesDatabase
+import com.example.todoapp.data.repository.remote.TemplateService
+import com.example.todoapp.data.repository.room.NotesDaoService
+import com.example.todoapp.data.repository.room.RoomNotesDaoRepo
+import com.example.todoapp.domain.repository.localroom.RoomNotesServicesImplementation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,19 +31,28 @@ object AppModule {
     /*  ROOM DB START HERE    */
     @Provides
     @Singleton
-    fun provideNoteDatabase(app: Application): TemplateDatabase {
+    fun provideNoteDatabase(app: Application): DNotesDatabase {
         return Room.databaseBuilder(
             app,
-            TemplateDatabase::class.java,
+            DNotesDatabase::class.java,
             "note_db"
         ).fallbackToDestructiveMigration().build()
     }
 
     @Provides
     @Singleton
-    fun provideNoteRepository(database: TemplateDatabase): TemplateRepo {
-        return TemplateRepoImplementation(database.templateDao)
+    fun provideNotesDao(database: DNotesDatabase): NotesDaoService {
+        return database.notesDao
     }
+
+    @Provides
+    @Singleton
+    fun provideNoteRepository(database: DNotesDatabase): RoomNotesDaoRepo {
+        return RoomNotesServicesImplementation(database.notesDao)
+    }
+
+
+
 
     /*  ROOM DB END HERE    */
 

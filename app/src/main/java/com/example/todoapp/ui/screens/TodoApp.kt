@@ -5,22 +5,27 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.todoapp.ui.components.FloatingActionBtn
 import com.example.todoapp.ui.components.TopBar
 import com.example.todoapp.ui.components.VerticalLazyList
+import com.example.todoapp.ui.view.TodoViewModel
 
 
 @Composable
 fun TodoApp(
     navController: NavController,
-    onNavigate: () -> Unit
+    viewModel: TodoViewModel = hiltViewModel()
 ) {
+//    val notes by viewModel.notes.collectAsState()
+
     Scaffold(topBar = {
         TopBar(title = "Todo")
     },
         floatingActionButton = { FloatingActionBtn() }) { innerPadding ->
         VerticalLazyList(modifier = Modifier.padding(innerPadding))
+//        println(notes)
     }
 
 }

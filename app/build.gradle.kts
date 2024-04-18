@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-
+    alias(libs.plugins.google.devtools.ksp)
+    alias(libs.plugins.google.dagger.hilt.android)
 
 }
 
@@ -69,7 +70,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.navigation.compose)
-    implementation (libs.retrofit)
+    implementation(libs.retrofit)
 
     implementation(libs.androidx.room.runtime)
     annotationProcessor(libs.androidx.room.compiler)
@@ -81,21 +82,21 @@ dependencies {
     implementation(libs.hilt.android)
 
 
-    implementation (libs.androidx.hilt.navigation.compose.v110alpha01)
+    implementation(libs.androidx.hilt.navigation.compose.v110alpha01)
 
     // Java language implementation
     implementation(libs.androidx.activity)
     // Kotlin
     implementation(libs.androidx.activity.ktx)
+    implementation(libs.androidx.hilt.navigation.fragment)
 
+    // To use Kotlin Symbol Processing (KSP)
+    ksp(libs.androidx.room.compiler)
+    ksp(libs.hilt.android.compiler)
 
+    implementation(libs.converter.gson)
 
-
-    implementation (libs.converter.gson)
-
-    implementation (libs.okhttp)
-
-
+    implementation(libs.okhttp)
 
 
 }
