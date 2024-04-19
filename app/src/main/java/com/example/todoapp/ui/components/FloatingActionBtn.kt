@@ -7,12 +7,15 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavController
 
 
 @Composable
-fun FloatingActionBtn() {
+fun FloatingActionBtn(navController: NavController) {
     FloatingActionButton(
-        onClick = { /* Handle FAB click */ },
+        onClick = {
+            navController.navigate("todoCreateNoteScreen")
+        },
         shape = CircleShape,
         containerColor = Color.Yellow,
         contentColor = Color.Black

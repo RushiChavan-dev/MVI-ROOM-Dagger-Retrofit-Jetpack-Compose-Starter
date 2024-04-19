@@ -18,8 +18,8 @@ import kotlinx.coroutines.flow.Flow
 // Room TemplateRepo Service
 interface RoomNotesDaoRepo {
 //    fun getAll(): Flow<List<NotesDaoService>>
-    suspend fun insertNote(): Unit
-    suspend fun getAllNotes():List<NotesModel>
+    suspend fun insertNote(notesModel: NotesModel): Unit
+    fun getAllNotes():Flow<List<NotesModel>>
 //    fun insertNote() :
 
 }

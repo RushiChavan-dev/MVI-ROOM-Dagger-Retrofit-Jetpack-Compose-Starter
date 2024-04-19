@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 
 
 @Dao
-interface NotesDaoService {
+interface NotesDaoService   {
 
 
 
@@ -29,7 +29,7 @@ interface NotesDaoService {
 
 
     @Query("SELECT * FROM NotesModel")
-    suspend fun getAllNotes(): List<NotesModel>
+    fun getAllNotes(): Flow<List<NotesModel>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNote(note: NotesModel)

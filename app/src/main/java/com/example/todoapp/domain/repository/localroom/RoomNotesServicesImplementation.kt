@@ -3,7 +3,6 @@ package com.example.todoapp.domain.repository.localroom
 import com.example.todoapp.data.common.model.NotesModel
 import com.example.todoapp.data.repository.room.NotesDaoService
 import com.example.todoapp.data.repository.room.RoomNotesDaoRepo
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -24,16 +23,16 @@ import javax.inject.Inject
 
 class RoomNotesServicesImplementation @Inject constructor(private val notesDaoService: NotesDaoService) : RoomNotesDaoRepo {
     // Implementation
-    val note = NotesModel(
-        id = 2,
-        title = "Note 2",
-        description = "Testing Node."
-    )
-    override suspend fun insertNote() {
-        return notesDaoService.insertNote(note)
+//    val note = NotesModel(
+//        id = 2,
+//        title = "Note 2",
+//        description = "Testing Node."
+//    )
+    override suspend fun insertNote(notesModel : NotesModel) {
+        return notesDaoService.insertNote(notesModel)
     }
 
-    override suspend fun getAllNotes(): List<NotesModel> {
+    override fun getAllNotes(): Flow<List<NotesModel>> {
         return notesDaoService.getAllNotes()
     }
 }
