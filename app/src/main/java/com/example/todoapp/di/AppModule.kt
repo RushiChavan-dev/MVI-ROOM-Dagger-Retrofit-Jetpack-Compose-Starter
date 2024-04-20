@@ -3,7 +3,8 @@ package com.example.todoapp.di
 import android.app.Application
 import androidx.room.Room
 import com.example.todoapp.data.database.DNotesDatabase
-import com.example.todoapp.data.repository.remote.TemplateService
+import com.example.todoapp.data.repository.remote.APIAbstractRetrofitServiceRepo
+import com.example.todoapp.data.repository.remote.APIRetrofitService
 import com.example.todoapp.data.repository.room.NotesDaoService
 import com.example.todoapp.data.repository.room.RoomNotesDaoRepo
 import com.example.todoapp.domain.repository.localroom.RoomNotesServicesImplementation
@@ -24,7 +25,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    private const val BASE_URL = "https://your_base_url.com"
+    private const val BASE_URL = "https://dummyjson.com/"
     private const val RATE_LIMIT_PER_MINUTE = 60 // Adjust according to your API rate limit
 
 
@@ -75,9 +76,15 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit): TemplateService {
-        return retrofit.create(TemplateService::class.java)
+    fun provideAPIRetrofitService(retrofit: Retrofit): APIRetrofitService {
+        return retrofit.create(APIRetrofitService::class.java)
     }
+
+//    @Provides
+//    @Singleton
+//    fun provideAPIAbstractRetrofitServiceRepo(retrofit: Retrofit) : APIAbstractRetrofitServiceRepo {
+//        return retrofit.
+//    }
 
     private class RateLimitInterceptor(private val limit: Int) : Interceptor {
         private var lastRequestTimestamp = 0L

@@ -1,29 +1,37 @@
 package com.example.todoapp.ui.view
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todoapp.data.common.model.NotesModel
+import com.example.todoapp.data.common.model.TodosRetrofitModel
 import com.example.todoapp.domain.repository.localroom.RoomNotesServicesImplementation
+import com.example.todoapp.domain.repository.remote.APIRetrofitServiceImplementation
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import okhttp3.Dispatcher
 import javax.inject.Inject
 
 
 
 @HiltViewModel
 class TodoViewModel @Inject constructor(
-    private val roomNotesServices: RoomNotesServicesImplementation
+    private val roomNotesServices: RoomNotesServicesImplementation,
+    private val retrofitServiceImplementation: APIRetrofitServiceImplementation
 ) : ViewModel() {
 
+
+    // For Room Database response
     private val _notes = MutableStateFlow<List<NotesModel>>(emptyList()) // Assuming Note is the type of your notes
     val notes: StateFlow<List<NotesModel>> = _notes.asStateFlow()
+
+
+    // For Retrofit Model,/ Remote server
+    private val _todosResponse = MutableStateFlow<TodosRetrofitModel?>(null)
+    val todosResponse: StateFlow<TodosRetrofitModel?> = _todosResponse.asStateFlow()
+
+
 
     init {
         loadNotes()
@@ -31,6 +39,7 @@ class TodoViewModel @Inject constructor(
 
     private fun loadNotes() {
         viewModelScope.launch{
+            getRemoteTodos()
             getNotes()
         }
     }
@@ -60,6 +69,22 @@ class TodoViewModel @Inject constructor(
         Log.d("TAG", "loadResponse: $response ")
     }
 */
+
+    private suspend fun getRemoteTodos(){
+
+      retrofitServiceImplementation.getNotes().collect{response->
+          // We can emit the response from here to anywhere
+          _todosResponse.emit(response)
+
+        }
+
+
+    }
+
+
+    /*
+    * Retrofit Call Start Here
+    * */
 
 
 }
