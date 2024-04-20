@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.todoapp.data.common.model.RetTodo
 import com.example.todoapp.ui.view.TodoViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -74,6 +75,10 @@ fun TodoCreateNote(
                     showError = false
                     CoroutineScope(Dispatchers.IO).launch{
                         viewModel.saveNote(title,description)
+
+                    }
+                    CoroutineScope(Dispatchers.IO).launch {
+                        viewModel.insertTodo(RetTodo(todo = title, completed = true, userId = 7))
                     }
                 } else {
                     showError = true

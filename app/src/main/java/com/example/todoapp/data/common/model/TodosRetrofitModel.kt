@@ -17,3 +17,11 @@ data class Todo(
     val userId: Int
 )
 
+data class RetTodo(
+    val todo: String,
+    val completed: Boolean,
+    val userId: Int
+)
+
+
+

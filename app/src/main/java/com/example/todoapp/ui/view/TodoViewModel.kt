@@ -1,8 +1,11 @@
 package com.example.todoapp.ui.view
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todoapp.data.common.model.NotesModel
+import com.example.todoapp.data.common.model.RetTodo
+import com.example.todoapp.data.common.model.Todo
 import com.example.todoapp.data.common.model.TodosRetrofitModel
 import com.example.todoapp.domain.repository.localroom.RoomNotesServicesImplementation
 import com.example.todoapp.domain.repository.remote.APIRetrofitServiceImplementation
@@ -17,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TodoViewModel @Inject constructor(
-    private val roomNotesServices: RoomNotesServicesImplementation,
+    private val roomNotesServicesImplementation: RoomNotesServicesImplementation,
     private val retrofitServiceImplementation: APIRetrofitServiceImplementation
 ) : ViewModel() {
 
@@ -27,9 +30,9 @@ class TodoViewModel @Inject constructor(
     val notes: StateFlow<List<NotesModel>> = _notes.asStateFlow()
 
 
-    // For Retrofit Model,/ Remote server
+    // For Retrofit Model,/ from Remote server response
     private val _todosResponse = MutableStateFlow<TodosRetrofitModel?>(null)
-    val todosResponse: StateFlow<TodosRetrofitModel?> = _todosResponse.asStateFlow()
+    val todos: StateFlow<TodosRetrofitModel?> = _todosResponse
 
 
 
@@ -39,7 +42,7 @@ class TodoViewModel @Inject constructor(
 
     private fun loadNotes() {
         viewModelScope.launch{
-            getRemoteTodos()
+//            getRemoteTodos()
             getNotes()
         }
     }
@@ -47,7 +50,7 @@ class TodoViewModel @Inject constructor(
     // As this insertNote Method is private
     // To call this method we have to create another method
     private suspend fun insertNote(notesModel: NotesModel) {
-        roomNotesServices.insertNote(notesModel)
+        roomNotesServicesImplementation.insertNote(notesModel)
     }
 
     // Example of another function that calls insertNote
@@ -57,34 +60,52 @@ class TodoViewModel @Inject constructor(
     }
 
     private suspend fun getNotes()  {
-         roomNotesServices.getAllNotes().collect{response  ->
+        roomNotesServicesImplementation.getAllNotes().collect{response  ->
             _notes.emit(response)
         }
 
     }
 
-/*
-    suspend fun getNotesReturn() : List<NotesModel> {
-        var response =  roomNotesServices.getAllNotes()
-        Log.d("TAG", "loadResponse: $response ")
-    }
-*/
+    /*
+        suspend fun getNotesReturn() : List<NotesModel> {
+            var response =  roomNotesServices.getAllNotes()
+            Log.d("TAG", "loadResponse: $response ")
+        }
+    */
+
+
+
+
+    // * Retrofit Call Start Here *
+
 
     private suspend fun getRemoteTodos(){
-
-      retrofitServiceImplementation.getNotes().collect{response->
-          // We can emit the response from here to anywhere
-          _todosResponse.emit(response)
-
+        try {
+            val res = retrofitServiceImplementation.getNotes()
+            _todosResponse.emit(res)
+        }catch (e:Exception){
+            Log.e("Exception","This is ex : ${e.message}")
         }
+    }
 
+    suspend fun insertTodo(retTodo:RetTodo){
+        var res =  insertRemoteTodo(retTodo)
+        Log.d("TAG", "insertRemoteTodo: $res")
+
+    }
+    private suspend fun insertRemoteTodo(retTodo:RetTodo): Todo?{
+        try {
+            var res = retrofitServiceImplementation.insertTodoNotes(retTodo = retTodo)
+
+            Log.d("TAG", "insertRemoteTodo: $res")
+            return res
+        }catch (e:Exception){
+            Log.d("Exception", "This is Response EX: $e")
+            return null
+        }
 
     }
 
-
-    /*
-    * Retrofit Call Start Here
-    * */
 
 
 }
